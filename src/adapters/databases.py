@@ -8,10 +8,10 @@ from sqlalchemy.orm.decl_api import registry
 
 from src.commons.config import settings
 
-DRIVER_REGISTER_ENGINE: Engine = create_engine(settings.DATABASE_URI)
+DB_ENGINE: Engine = create_engine(settings.DATABASE_URI)
 
 Session: Callable[..., SessionModel] = sessionmaker(
-    bind=DRIVER_REGISTER_ENGINE,
+    bind=DB_ENGINE,
     autocommit=False,
     autoflush=False,
     expire_on_commit=False,
