@@ -14,6 +14,7 @@ class Settings(BaseModel):
     REST_APPLICATION_NAME: str = config("REST_APPLICATION_NAME")
     REST_APPLICATION_DESCRIPTION: str = config("REST_APPLICATION_DESCRIPTION")
     APPLICATION_URL_CORS: str = config("APPLICATION_URL_CORS", cast=Csv())
+    DATABASE_URI: str = config("DATABASE_URI")
 
 
 settings = Settings()
