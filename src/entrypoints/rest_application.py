@@ -3,6 +3,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.adapters.orm import start_mappers
 from src.commons.config import settings
 from src.commons.middleware.logger_middleware import LoggerMiddleware
 
@@ -23,6 +24,8 @@ def get_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    start_mappers()
 
     return app
 
