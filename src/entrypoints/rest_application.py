@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from src.adapters.orm import start_mappers
 from src.commons.config import settings
 from src.commons.middleware.logger_middleware import LoggerMiddleware
+from src.presentation.fastapi.v1 import router as v1_router
 
 LOGGER = logging.getLogger(__name__)
 
@@ -26,6 +27,8 @@ def get_app() -> FastAPI:
     )
 
     start_mappers()
+
+    app.include_router(v1_router)
 
     return app
 
