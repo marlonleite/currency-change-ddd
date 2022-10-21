@@ -16,6 +16,7 @@ from src.application.command_handlers.currency_command_handler import (
 )
 from src.application.query_handlers.currency_query_handler import list_currencies
 from src.application.uow import SqlAlchemyUnitOfWork
+from src.commons.config import settings
 from src.domain.currency.commands import (
     ConvertCurrencyCommand,
     CreateCurrencyCommand,
@@ -28,15 +29,17 @@ from src.presentation.fastapi.schemas.currency import (
 )
 from src.presentation.fastapi.schemas.pagination import Pagination
 
-currency_router = APIRouter()
+currency_router = APIRouter(
+    prefix="/currencies",
+    tags=["currencies"],
+)
 
 
 @currency_router.get(
-    "/currencies",
+    "/",
     response_model=Pagination[CurrencySchema],
-    tags=["v1/app"],
 )
-def get_currencies(limit: int = 10):
+async def get_currencies(limit: int = 10):
     uow = SqlAlchemyUnitOfWork()
 
     currencies = list_currencies(uow=uow, limit=limit)
@@ -48,12 +51,11 @@ def get_currencies(limit: int = 10):
 
 
 @currency_router.post(
-    "/currencies",
+    "/",
     response_model=CurrencySchema,
     status_code=HTTPStatus.CREATED,
-    tags=["v1/app"],
 )
-def create_currencies(data: CreateCurrencySchema):
+async def create_currencies(data: CreateCurrencySchema):
     try:
         command = CreateCurrencyCommand(code=data.code)
         uow = SqlAlchemyUnitOfWork()
@@ -64,11 +66,10 @@ def create_currencies(data: CreateCurrencySchema):
 
 
 @currency_router.delete(
-    "/currencies/{item_id}",
+    "/{item_id}",
     status_code=HTTPStatus.NO_CONTENT,
-    tags=["v1/app"],
 )
-def delete_currencies(item_id: int):
+async def delete_currencies(item_id: int):
     try:
         uow = SqlAlchemyUnitOfWork()
         command = DeleteCurrencyCommand(item_id=item_id)
@@ -78,10 +79,7 @@ def delete_currencies(item_id: int):
         raise HTTPException(HTTPStatus.NOT_FOUND, detail=exc.public_message) from exc
 
 
-@currency_router.get(
-    "/convert/{code}/{amount}",
-    tags=["v1/app"],
-)
+@currency_router.get("/{code}/convert/{amount}")
 async def convert(code: str, amount: float):
     try:
         command = ConvertCurrencyCommand(
@@ -89,7 +87,7 @@ async def convert(code: str, amount: float):
             amount=amount,
         )
         uow = SqlAlchemyUnitOfWork()
-        apilayer_repository = ApiLayerRepository()
+        apilayer_repository = ApiLayerRepository(settings.APILAYER_URL)
         result = convert_currency(
             command=command, uow=uow, apilayer_repository=apilayer_repository
         )

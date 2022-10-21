@@ -20,33 +20,6 @@ from src.domain.currency.models import Currency
 LOGGER = logging.getLogger(__name__)
 
 
-def convert_currency(
-    command: ConvertCurrencyCommand,
-    uow: SqlAlchemyUnitOfWork,
-    apilayer_repository: ApiLayerRepository,
-) -> dict:
-    with uow:
-        codes = [
-            currency.code
-            for currency in uow.currencies.all()
-            if currency.code not in command.code
-        ]
-
-        try:
-            latest = apilayer_repository.latest(base=command.code, symbols=codes)
-        except ApiLayerResponseError as exc:
-            LOGGER.warning(CurrencyConvertInconsistentError.message(command.code))
-            raise CurrencyConvertInconsistentError.create(command.code) from exc
-
-        items = {}
-        for rate in latest:
-            currency = Currency(code=rate.code)
-            calculatiuon = currency.total_price(amount=command.amount, price=rate.price)
-            items[currency.code] = calculatiuon
-
-        return items
-
-
 def create_currency(
     command: CreateCurrencyCommand, uow: SqlAlchemyUnitOfWork
 ) -> Currency:
@@ -75,3 +48,30 @@ def delete_currency(command: DeleteCurrencyCommand, uow: SqlAlchemyUnitOfWork) -
 
         uow.currencies.delete(currency)
         uow.commit()
+
+
+def convert_currency(
+    command: ConvertCurrencyCommand,
+    uow: SqlAlchemyUnitOfWork,
+    apilayer_repository: ApiLayerRepository,
+) -> dict:
+    with uow:
+        codes = [
+            currency.code
+            for currency in uow.currencies.all()
+            if currency.code not in command.code
+        ]
+
+        try:
+            latest = apilayer_repository.latest(base=command.code, symbols=codes)
+        except ApiLayerResponseError as exc:
+            LOGGER.warning(CurrencyConvertInconsistentError.message(command.code))
+            raise CurrencyConvertInconsistentError.create(command.code) from exc
+
+        items = {}
+        for rate in latest:
+            currency = Currency(code=rate.code)
+            calculatiuon = currency.total_price(amount=command.amount, price=rate.price)
+            items[currency.code] = calculatiuon
+
+        return items

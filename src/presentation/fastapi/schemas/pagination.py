@@ -1,4 +1,4 @@
-from typing import Generic, Optional, TypeVar
+from typing import Generic, TypeVar
 
 from pydantic.generics import GenericModel
 
@@ -10,5 +10,5 @@ class Pagination(GenericModel, Generic[T]):
     page: int = 1
     per_page: int = 10
     total_count: int
-    next: Optional[str] = None
-    previous: Optional[str] = None
+    next: str | None
+    previous: str | None
