@@ -8,8 +8,13 @@ currency_table = Table(
     "currencies",
     mapper_registry.metadata,
     Column("id", Integer, primary_key=True, autoincrement=True),
-    Column("code", String(8)),
-    Column("name", String(100)),
-    Column("created_at", DateTime, default=datetime.now),
-    Column("updated_at", DateTime, default=datetime.now, onupdate=datetime.now),
+    Column("code", String(8), nullable=False),
+    Column("created_at", DateTime, default=datetime.now, nullable=False),
+    Column(
+        "updated_at",
+        DateTime,
+        default=datetime.now,
+        onupdate=datetime.now,
+        nullable=False,
+    ),
 )
