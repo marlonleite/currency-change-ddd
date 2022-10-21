@@ -19,6 +19,9 @@ class CRUDSqlAlchemyRepository(AbstractRepository[T]):
     def _get(self, **kwargs) -> Optional[T]:
         return self.session.query(self.obj_type).filter_by(**kwargs).first()
 
+    def _delete(self, obj: T):
+        self.session.delete(obj)
+
     def all(self) -> List[T]:
         return self.session.query(self.obj_type).all()
 

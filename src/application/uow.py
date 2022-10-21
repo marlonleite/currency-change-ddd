@@ -21,6 +21,7 @@ class SqlAlchemyUnitOfWork(UnitOfWorkBase):
 
     def __enter__(self):
         self.session = self.session_factory()
+
         self.currencies = CurrencyRepository(self.session, Currency)
 
     def __exit__(self, type, *_):

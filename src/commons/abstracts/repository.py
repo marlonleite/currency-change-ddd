@@ -18,10 +18,18 @@ class AbstractRepository(abc.ABC, Generic[T]):
             self.seen.add(obj)
         return obj
 
+    def delete(self, obj: T):
+        self._delete(obj)
+        self.seen.add(obj)
+
     @abc.abstractmethod
     def _add(self, obj: T):
         raise NotImplementedError
 
     @abc.abstractmethod
     def _get(self, **kwargs) -> Optional[T]:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def _delete(self, obj: T):
         raise NotImplementedError
