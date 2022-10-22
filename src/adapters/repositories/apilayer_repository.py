@@ -14,8 +14,8 @@ class ApiLayerQuoted(BaseModel):
 
 
 class ApiLayerRepository:
-    def __init__(self):
-        self.api_url = settings.APILAYER_URL
+    def __init__(self, url: str):
+        self.api_url = url
         self.headers = {"apikey": settings.APILAYER_APIKEY}
 
     def latest(self, base: str, symbols: list[str]) -> list[ApiLayerQuoted]:

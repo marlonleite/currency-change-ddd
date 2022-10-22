@@ -1,7 +1,7 @@
 from fastapi.routing import APIRouter
 
 from .resources.currency import currency_router
-from .resources.healthy import health_router
+from .resources.health_check import health_router
 
 router = APIRouter(prefix="/api/v1")
 
