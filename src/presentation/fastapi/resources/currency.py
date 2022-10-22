@@ -88,4 +88,4 @@ async def convert(code: str, amount: float):
         )
         return JSONResponse(content=result)
     except ApiLayerResponseError as exc:
-        raise HTTPException(HTTPStatus.CONFLICT, detail=exc.public_message) from exc
+        raise HTTPException(HTTPStatus.CONFLICT, detail=str(exc)) from exc

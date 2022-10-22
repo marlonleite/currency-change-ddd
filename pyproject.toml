@@ -59,5 +59,6 @@ env_files = [
 module = [
     "decouple",
     "uvicorn",
+    "requests",
 ]
 ignore_missing_imports = true
