@@ -1,9 +1,12 @@
+from enum import Enum
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import clear_mappers, scoped_session, sessionmaker
 
 from src.adapters.databases import DB_ENGINE, mapper_registry
 from src.adapters.orm import start_mappers
+from src.adapters.repositories.apilayer_repository import ApiLayerRepository
 from src.application.uow import SqlAlchemyUnitOfWork
 from src.entrypoints.rest_application import get_app
 
@@ -69,3 +72,28 @@ def db_session(engine):
 @pytest.fixture()
 def uow(db_session):
     yield SqlAlchemyUnitOfWork()
+
+
+@pytest.fixture
+def apilayer_repository(requests_mock, rates, latest_success):
+    requests_mock.get(
+        "http://test.com",
+        json={},
+    )
+    requests_mock.get(
+        "http://test.com/latest",
+        json={
+            "base": "BRL",
+            "date": "2022-10-21",
+            "rates": rates,
+            "success": latest_success,
+            "timestamp": 1666390863,
+        },
+    )
+    yield ApiLayerRepository("http://test.com")
+
+
+class CurrencyPriceEnumTest(Enum):
+    EUR = 0.196411
+    INR = 15.987327
+    USD = 0.193689

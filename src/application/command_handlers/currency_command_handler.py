@@ -5,11 +5,7 @@ from src.adapters.repositories.apilayer_repository import (
     ApiLayerResponseError,
 )
 from src.application.uow import SqlAlchemyUnitOfWork
-from src.domain.currency.commands import (
-    ConvertCurrencyCommand,
-    CreateCurrencyCommand,
-    DeleteCurrencyCommand,
-)
+from src.domain.currency.commands import ConvertCurrencyCommand, CreateCurrencyCommand
 from src.domain.currency.exceptions import (
     CurrencyAlreadyExists,
     CurrencyConvertInconsistentError,
@@ -38,13 +34,13 @@ def create_currency(
         return new_currency
 
 
-def delete_currency(command: DeleteCurrencyCommand, uow: SqlAlchemyUnitOfWork) -> None:
+def delete_currency(currency_id: int, uow: SqlAlchemyUnitOfWork) -> None:
     with uow:
-        currency = uow.currencies.get(id=command.item_id)
+        currency = uow.currencies.get(id=currency_id)
 
         if currency is None:
-            LOGGER.warning(CurrencyNotFound.message(command.item_id))
-            raise CurrencyNotFound.create(command.item_id)
+            LOGGER.warning(CurrencyNotFound.message(currency_id))
+            raise CurrencyNotFound.create(currency_id)
 
         uow.currencies.delete(currency)
         uow.commit()

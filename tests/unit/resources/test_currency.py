@@ -5,6 +5,7 @@ from src.adapters.repositories.apilayer_repository import (
     ApiLayerRepository,
 )
 from src.domain.currency.models import Currency
+from tests.conftest import CurrencyPriceEnumTest
 from tests.factories.currency_factory import CurrencyFactory
 
 
@@ -79,12 +80,12 @@ def test_delete_currency_endpoint_when_not_found(uow, client):
     ApiLayerRepository,
     "latest",
     return_value=[
-        ApiLayerQuoted(code="USD", price=1.00),
-        ApiLayerQuoted(code="EUR", price=1.01),
-        ApiLayerQuoted(code="INR", price=82.54),
+        ApiLayerQuoted(code="USD", price=CurrencyPriceEnumTest.USD.value),
+        ApiLayerQuoted(code="EUR", price=CurrencyPriceEnumTest.EUR.value),
+        ApiLayerQuoted(code="INR", price=CurrencyPriceEnumTest.INR.value),
     ],
 )
-def test_convert_currency_endpoint(latest_mock, uow, client):
+def test_convert_currency_endpoint(apilayer_repository, uow, client):
     brl = CurrencyFactory.create(code="BRL")
     eur = CurrencyFactory.create(code="EUR")
     inr = CurrencyFactory.create(code="INR")
@@ -100,7 +101,7 @@ def test_convert_currency_endpoint(latest_mock, uow, client):
 
     assert response.status_code == 200
     assert response.json() == {
-        "USD": Currency("USD").total_price(255.5, 1.00),
-        "EUR": Currency("EUR").total_price(255.5, 1.01),
-        "INR": Currency("INR").total_price(255.5, 82.54),
+        "USD": Currency("USD").total_price(255.5, CurrencyPriceEnumTest.USD.value),
+        "EUR": Currency("EUR").total_price(255.5, CurrencyPriceEnumTest.EUR.value),
+        "INR": Currency("INR").total_price(255.5, CurrencyPriceEnumTest.INR.value),
     }

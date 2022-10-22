@@ -9,11 +9,6 @@ class CreateCurrencyCommand(DomainCommand):
 
 
 @dataclass
-class DeleteCurrencyCommand(DomainCommand):
-    item_id: int
-
-
-@dataclass
 class ConvertCurrencyCommand(DomainCommand):
     code: str
     amount: float

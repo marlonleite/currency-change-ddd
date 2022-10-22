@@ -17,11 +17,7 @@ from src.application.command_handlers.currency_command_handler import (
 from src.application.query_handlers.currency_query_handler import list_currencies
 from src.application.uow import SqlAlchemyUnitOfWork
 from src.commons.config import settings
-from src.domain.currency.commands import (
-    ConvertCurrencyCommand,
-    CreateCurrencyCommand,
-    DeleteCurrencyCommand,
-)
+from src.domain.currency.commands import ConvertCurrencyCommand, CreateCurrencyCommand
 from src.domain.currency.exceptions import CurrencyAlreadyExists, CurrencyNotFound
 from src.presentation.fastapi.schemas.currency import (
     CreateCurrencySchema,
@@ -72,8 +68,7 @@ async def create_currencies(data: CreateCurrencySchema):
 async def delete_currencies(item_id: int):
     try:
         uow = SqlAlchemyUnitOfWork()
-        command = DeleteCurrencyCommand(item_id=item_id)
-        delete_currency(command, uow)
+        delete_currency(currency_id=item_id, uow=uow)
         return Response(status_code=HTTPStatus.NO_CONTENT)
     except CurrencyNotFound as exc:
         raise HTTPException(HTTPStatus.NOT_FOUND, detail=exc.public_message) from exc
