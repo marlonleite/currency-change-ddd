@@ -15,7 +15,9 @@ The project is configured to run in Docker with FastApi and Postgres and tests a
 ### Commands Make and/or Docker
 
 To build the project and run it:
-`$ make build`
+```
+make build
+``` 
 This command builds and runs the project.
 
 To just run the project after building:
