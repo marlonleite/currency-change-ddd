@@ -16,19 +16,12 @@ To build the project and run it in docker:
 To just run the project after building it in docker:
 `$ make run` or `$ make up`
 
-## Documentation
+## Docs
 
 You can find the Swagger Documentation OAS3. The project will be available at `http://localhost:8080/docs`.
 
- ### Entrypoints
-```
- - GET /api/v1/healthcheck
- - GET /api/v1/currencies
- - POST /api/v1/currencies
- - DELETE /api/v1/currencies/{item_id}
- - GET /api/v1/currencies/convert/{code}/{amount}
-```
-
 ## Test and Quality Assurance
 
-`$ make test` or `$ make test_v`
+You can run all the tests at once...
+
+`$ make test` or `$ make test_v` verbose.
