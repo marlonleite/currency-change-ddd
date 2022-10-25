@@ -15,23 +15,49 @@ The project is configured to run in Docker with FastApi and Postgres and tests a
 ### Commands Make and/or Docker
 
 To build the project and run it:
-`$ make build`
-This command builds and runs the project.
+```
+make build
+```
+*This command builds and runs the project.*
 
-To just run the project after building:
-`$ make run` or `$ make up` verbose
+To just run the docker project after building:
+```
+make run
+```
+or
+```
+make up
+```
+*verbose mode*
 
-To stop the project:
-`$ make down`
+To stop the docker project:
+```
+make down
+```
 
 To restart the project:
-`$ make restart`
+```
+make restart
+```
 
-To migrate data to the database:
-`$ make makemigrations`
-`$ make migrate`
+### Database:
 
-There are other commands inside the Makefile map. They are helpful for developers to debug their code.
+To create a new data migration:
+```
+make makemigrations
+```
+
+To migrate:
+```
+make migrate
+```
+
+To downgrade:
+```
+make downgrade
+```
+
+*There are other commands inside the Makefile map. They are helpful for developers to debug their code.*
 
 ## Docs
 
@@ -41,8 +67,17 @@ You can find the Swagger Documentation OAS3. The project will be available at `h
 
 You can run all the tests at once...
 
-`$ make test` or `$ make test_v` verbose or `$ make report` covarage.
+To test you must run the command to enjoy in the docker container:
 
-## Github Action
+```
+make bash
+```
 
-There is a GitHub action workflow to check the code quality helper in pull_request.
+After that, inside the docker container:
+```
+make test
+```
+
+## Author
+
+* **Marlon Leite** - [GitHub](https://github.com/marlonleite)
