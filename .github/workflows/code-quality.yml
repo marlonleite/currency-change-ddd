@@ -1,0 +1,37 @@
+name: "Code Quality"
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  Setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install poetry
+        run: pipx install poetry==1.1.15
+
+      - name: Install python
+        uses: actions/setup-python@v4.2.0
+        with:
+          python-version: '3.10'
+          cache: 'poetry'
+
+      - name: Install dependencies
+        run: |
+          poetry env use 3.10
+          make setup
+
+      - name: Linting
+        run: make lint
+
+      - name: Run mypy
+        run: make mypy
+
+      - name: Run test
+        run: make test
