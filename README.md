@@ -1,6 +1,6 @@
 # Currency Api
 
-Convert and register currencies.
+Register currencies and convert
 
 ## Local environment
 
@@ -18,7 +18,9 @@ To just run the project after building it in docker:
 
 ## Documentation
 
- Then project will be available at `http://localhost:8080/docs`. You can find it in the Swagger documentation.
+You can find the Swagger Documentation OAS3. Access the link below:
+
+`http://localhost:8080/docs`
 
  ### Entrypoints
 ```
