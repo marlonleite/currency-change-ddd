@@ -1,0 +1,22 @@
+{
+    "name": "currency-api",
+    "version": "2.0.0",
+    "main": "index.js",
+    "repository": "git@github.com:marlonleite/currency-api.git",
+    "author": "Marlon Leite <marlonleite@gmail.com>",
+    "license": "MIT",
+    "devDependencies": {
+      "@commitlint/cli": "^17.0.3",
+      "@commitlint/config-conventional": "^17.0.3",
+      "cz-conventional-changelog": "3.3.0",
+      "husky": "^8.0.1"
+    },
+    "scripts": {
+      "commit": "cz"
+    },
+    "config": {
+      "commitizen": {
+        "path": "./node_modules/cz-conventional-changelog"
+      }
+    }
+  }

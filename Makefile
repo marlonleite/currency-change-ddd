@@ -1,8 +1,13 @@
 .PHONY: test tests install pep8 clean delete proto
 
+DOCKER_COMPOSE_FILE := docker-compose.yml
+DOCKER_COMPOSE_DB_CONTAINER_NAME := postgres
+API_CONTAINER_NAME := api
+PROJECT_NAME := currency_api
+DOCKER_COMPOSE := docker-compose -f ${DOCKER_COMPOSE_FILE}
+
 # Poetry and lint
 setup:
-	cp dev/dev.env .env
 	poetry install
 	poetry run pre-commit install
 
@@ -12,23 +17,63 @@ lint:
 mypy:
 	poetry run mypy src
 
+versions:
+	poetry show -l -o
+
+#server
+runserver:
+	python -m uvicorn src.entrypoints.rest_application:get_app --host 0.0.0.0 --port 8080 --reload
+
 init:
-	python -m alembic init alembic
+	$(DOCKER_COMPOSE) exec $(API_CONTAINER_NAME) su -c "python -m alembic init alembic"
 
 makemigrations:
-	python -m alembic revision --autogenerate -m ""
+	$(DOCKER_COMPOSE) exec $(API_CONTAINER_NAME) su -c 'python -m alembic revision --autogenerate -m ""'
 
 migrate:
-	python -m alembic upgrade head
+	$(DOCKER_COMPOSE) exec $(API_CONTAINER_NAME) su -c "python -m alembic upgrade head"
 
 downgrade:
-	python -m alembic downgrade -1
+	$(DOCKER_COMPOSE) exec $(API_CONTAINER_NAME) su -c "python -m alembic downgrade -1"
 
-runserver:
-	poetry run python -m uvicorn src.entrypoints.rest_application:get_app --host 0.0.0.0 --port 8080 --reload
+up:
+	$(DOCKER_COMPOSE) up
 
-cz:
-	poetry run cz c
+stop:
+	$(DOCKER_COMPOSE) stop
+	$(DOCKER_COMPOSE) ps
+
+down:
+	$(DOCKER_COMPOSE) down
+	$(DOCKER_COMPOSE) ps
+
+run:
+	$(DOCKER_COMPOSE) up -d
+	$(DOCKER_COMPOSE) ps
+
+build: build_dep run
+	@echo "List services"
+	$(DOCKER_COMPOSE) ps
+	@echo "List docker network"
+	docker network ls
+
+build_dep:
+	DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 $(DOCKER_COMPOSE) build --parallel
+
+restart:
+	$(DOCKER_COMPOSE) restart $(API_CONTAINER_NAME)
+
+install:
+	$(DOCKER_COMPOSE) exec $(API_CONTAINER_NAME) su -c "poetry install"
+
+env:
+	$(DOCKER_COMPOSE) exec $(API_CONTAINER_NAME) su -c "env"
+
+logs:
+	docker logs --follow $(API_CONTAINER_NAME)
+
+bash:
+	$(DOCKER_COMPOSE) exec $(API_CONTAINER_NAME) bash
 
 # Testing
 test:
@@ -36,6 +81,11 @@ test:
 
 test_v:
 	poetry run pytest --cov=src --color=yes -vv tests/
+
+report:
+	poetry run pytest --cov=src --color=yes tests/
+	coverage report
+	coverage html -d htmlcov
 
 # Clean up
 clean:
