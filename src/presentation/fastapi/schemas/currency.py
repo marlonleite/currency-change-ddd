@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic.main import BaseModel
+from pydantic.main import BaseModel, Field
 
 
 class CurrencySchema(BaseModel):
@@ -14,9 +14,4 @@ class CurrencySchema(BaseModel):
 
 
 class CreateCurrencySchema(BaseModel):
-    code: str
-
-
-class CurrencyPricesSchema(BaseModel):
-    code: str
-    amount: str
+    code: str = Field(example="BRL")

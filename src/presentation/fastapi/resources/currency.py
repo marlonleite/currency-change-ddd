@@ -74,7 +74,7 @@ async def delete_currencies(item_id: int):
         raise HTTPException(HTTPStatus.NOT_FOUND, detail=exc.public_message) from exc
 
 
-@currency_router.get("/{code}/convert/{amount}")
+@currency_router.get("/convert/{code}/{amount}")
 async def convert(code: str, amount: float):
     try:
         command = ConvertCurrencyCommand(
