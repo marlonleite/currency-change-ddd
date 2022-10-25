@@ -4,7 +4,7 @@ Register currencies and convert
 
 ## Local environment
 
-Your local environment can be configured through and env file or using docker. Then, the project will be available at `http://localhost:8080/docs`.
+Your local environment can be configured through and env file or using docker.
 
 ## Instalation
 
@@ -18,9 +18,7 @@ To just run the project after building it in docker:
 
 ## Documentation
 
-You can find the Swagger Documentation OAS3. Access the link below:
-
-`http://localhost:8080/docs`
+You can find the Swagger Documentation OAS3. The project will be available at `http://localhost:8080/docs`.
 
  ### Entrypoints
 ```
