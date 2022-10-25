@@ -97,7 +97,7 @@ def test_convert_currency_endpoint(apilayer_repository, uow, client):
         uow.currencies.add(usd)
         uow.commit()
 
-    response = client.get("/api/v1/currencies/BRL/convert/255.5")
+    response = client.get("/api/v1/currencies/convert/BRL/255.5")
 
     assert response.status_code == 200
     assert response.json() == {
